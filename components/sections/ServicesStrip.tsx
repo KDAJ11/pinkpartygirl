@@ -65,7 +65,7 @@ export default function ServicesStrip() {
 
   return (
     <section className="py-24 bg-cream" ref={ref}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}

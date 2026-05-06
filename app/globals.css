@@ -32,28 +32,17 @@ body {
   overflow-x: hidden;
 }
 
-/* Typography */
 .font-display {
   font-family: var(--font-playfair);
 }
 
 /* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #FAF6EF;
-}
-::-webkit-scrollbar-thumb {
-  background: #F2A0B0;
-  border-radius: 3px;
-}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #FAF6EF; }
+::-webkit-scrollbar-thumb { background: #F2A0B0; border-radius: 3px; }
 
 /* Selection */
-::selection {
-  background: #F2A0B0;
-  color: #2D1B14;
-}
+::selection { background: #F2A0B0; color: #2D1B14; }
 
 /* Focus */
 :focus-visible {
@@ -62,7 +51,99 @@ body {
   border-radius: 4px;
 }
 
-/* Reduced motion */
+/* ─── Ambient orb keyframes (hero background) ────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes orbDrift1 {
+    0%   { transform: translate(0px, 0px) scale(1); }
+    100% { transform: translate(60px, -80px) scale(1.12); }
+  }
+  @keyframes orbDrift2 {
+    0%   { transform: translate(0px, 0px) scale(1.05); }
+    100% { transform: translate(-70px, 60px) scale(0.9); }
+  }
+  @keyframes orbDrift3 {
+    0%   { transform: translate(0px, 0px) scale(1); }
+    100% { transform: translate(40px, 70px) scale(1.08); }
+  }
+  @keyframes orbDrift4 {
+    0%   { transform: translate(0px, 0px) scale(0.95); }
+    100% { transform: translate(-50px, -40px) scale(1.1); }
+  }
+
+  .orb-1 {
+    animation: orbDrift1 16s ease-in-out alternate infinite;
+    will-change: transform;
+  }
+  .orb-2 {
+    animation: orbDrift2 13s ease-in-out alternate infinite;
+    animation-delay: -4s;
+    will-change: transform;
+  }
+  .orb-3 {
+    animation: orbDrift3 18s ease-in-out alternate infinite;
+    animation-delay: -8s;
+    will-change: transform;
+  }
+  .orb-4 {
+    animation: orbDrift4 14s ease-in-out alternate infinite;
+    animation-delay: -2s;
+    will-change: transform;
+  }
+}
+
+/* ─── Petal fall (hero) ───────────────────────────────────────────── */
+@keyframes petalFall {
+  0%   { transform: translateY(-10%) translateX(0) rotate(0deg); opacity: 0.8; }
+  100% { transform: translateY(110vh) translateX(80px) rotate(360deg); opacity: 0; }
+}
+
+/* ─── Float animations (decorative elements) ─────────────────────── */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-20px) rotate(5deg); }
+}
+@keyframes floatMedium {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%       { transform: translateY(-12px) rotate(-3deg); }
+}
+
+.animate-float-slow   { animation: floatSlow 6s ease-in-out infinite; }
+.animate-float-medium { animation: floatMedium 4s ease-in-out infinite; }
+
+/* ─── WhatsApp pulse ring ─────────────────────────────────────────── */
+@keyframes waPulse {
+  0%   { transform: scale(1); opacity: 0.6; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+.wa-pulse {
+  animation: waPulse 3s ease-out infinite;
+}
+
+/* ─── Shimmer text ────────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ─── BlushUnderline draw animation ──────────────────────────────── */
+.blush-underline-path {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  transition: stroke-dashoffset 0s;
+}
+.blush-underline-visible .blush-underline-path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .blush-underline-path {
+    stroke-dashoffset: 0 !important;
+    transition: none !important;
+  }
+}
+
+/* ─── Reduced motion: kill everything ────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -72,9 +153,7 @@ body {
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+  .text-balance { text-wrap: balance; }
 
   .gradient-text {
     background: linear-gradient(135deg, #C9956C, #F2A0B0, #C9956C);
@@ -98,6 +177,7 @@ body {
     height: 2px;
     background: linear-gradient(90deg, #F2A0B0, #C9956C);
     border-radius: 1px;
+    flex-shrink: 0;
   }
 
   .card-glass {

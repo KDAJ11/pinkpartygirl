@@ -1,14 +1,15 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 
 const testimonials = [
   {
     quote:
-      "Pinkpartygirl made my birthday feel like I was the only person in the world who mattered. The attention to detail was unreal — every element of the surprise was so perfectly *me*. I cried. Twice.",
+      "Pinkpartygirl made my birthday feel like I was the only person in the world who mattered. The attention to detail was unreal — every element of the surprise was so perfectly me. I cried. Twice.",
     name: "Adaeze O.",
-    title: "Birthday Surprise · Lagos",
+    occasion: "Birthday Surprise",
+    location: "Lagos",
     initials: "AO",
     color: "bg-blush-100",
   },
@@ -16,7 +17,8 @@ const testimonials = [
     quote:
       "I ordered the Indulgence Box for my sister's promotion and she wouldn't stop calling me to describe what was inside. The packaging alone had her emotional. Worth every kobo and then some.",
     name: "Temi B.",
-    title: "Indulgence Gift Box · Lekki",
+    occasion: "Indulgence Gift Box",
+    location: "Lekki",
     initials: "TB",
     color: "bg-amber-50",
   },
@@ -24,24 +26,30 @@ const testimonials = [
     quote:
       "I've used three different event planners in Lagos — Pinkpartygirl is in a completely different league. The aesthetic, the communication, the execution. My husband's 40th was everything I dreamed and more.",
     name: "Funmi A.",
-    title: "Event Styling · Victoria Island",
+    occasion: "Event Styling",
+    location: "Victoria Island",
     initials: "FA",
     color: "bg-rose-50",
   },
 ];
 
-const stagger = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.15 } },
-};
-const card = {
-  hidden: { opacity: 0, y: 36 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: "easeOut" as const } },
-};
+const ROTATION_INTERVAL = 5000;
 
 export default function TestimonialsSection() {
+  const [active, setActive] = useState(0);
+  const [paused, setPaused] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: false, margin: "-100px" });
+
+  const next = useCallback(() => {
+    setActive((prev) => (prev + 1) % testimonials.length);
+  }, []);
+
+  useEffect(() => {
+    if (paused || !inView) return;
+    const timer = setInterval(next, ROTATION_INTERVAL);
+    return () => clearInterval(timer);
+  }, [next, paused, inView]);
 
   return (
     <section
@@ -49,16 +57,16 @@ export default function TestimonialsSection() {
       style={{ background: "linear-gradient(180deg, #F5EDE0 0%, #FAF6EF 100%)" }}
       ref={ref}
     >
-      {/* Decorative quote mark */}
+      {/* Decorative oversized quote mark */}
       <div
-        className="absolute top-10 left-1/2 -translate-x-1/2 font-display text-[200px] leading-none text-blush/10 select-none pointer-events-none"
+        className="absolute top-6 left-1/2 -translate-x-1/2 font-display text-[220px] leading-none text-blush/8 select-none pointer-events-none"
         style={{ fontFamily: "var(--font-playfair)" }}
         aria-hidden="true"
       >
         &ldquo;
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16 relative z-10">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -81,44 +89,92 @@ export default function TestimonialsSection() {
           </h2>
         </motion.div>
 
-        {/* Cards */}
-        <motion.div
-          variants={stagger}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8"
+        {/* Single rotating testimonial */}
+        <div
+          className="max-w-2xl mx-auto text-center"
+          onMouseEnter={() => setPaused(true)}
+          onMouseLeave={() => setPaused(false)}
+          onFocus={() => setPaused(true)}
+          onBlur={() => setPaused(false)}
         >
-          {testimonials.map((t) => (
-            <motion.blockquote
-              key={t.name}
-              variants={card}
-              className="bg-white rounded-3xl p-8 shadow-card border border-cream-deep flex flex-col"
+          {/* Stars */}
+          <div className="flex justify-center gap-1 mb-8" aria-label="5 out of 5 stars">
+            {[...Array(5)].map((_, i) => (
+              <svg key={i} className="w-5 h-5 fill-rose-gold" viewBox="0 0 20 20" aria-hidden="true">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            ))}
+          </div>
+
+          {/* Quote with fade crossfade */}
+          <div className="relative min-h-[180px] flex items-center justify-center mb-8">
+            <AnimatePresence mode="wait">
+              <motion.blockquote
+                key={active}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.4, ease: "easeInOut" as const }}
+                className="absolute inset-0 flex items-center justify-center"
+                aria-live="polite"
+              >
+                <p
+                  className="font-display text-2xl md:text-[1.75rem] font-medium italic text-chocolate/80 leading-relaxed text-balance"
+                  style={{ fontFamily: "var(--font-playfair)" }}
+                >
+                  &ldquo;{testimonials[active].quote}&rdquo;
+                </p>
+              </motion.blockquote>
+            </AnimatePresence>
+          </div>
+
+          {/* Attribution */}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={`attr-${active}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35 }}
+              className="flex flex-col items-center gap-2"
             >
-              {/* Stars */}
-              <div className="flex gap-1 mb-5" aria-label="5 out of 5 stars">
-                {[...Array(5)].map((_, i) => (
-                  <svg key={i} className="w-4 h-4 fill-rose-gold" viewBox="0 0 20 20" aria-hidden="true">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
+              {/* Avatar */}
+              <div className={`w-12 h-12 rounded-full ${testimonials[active].color} flex items-center justify-center mb-1`}>
+                <span className="text-sm font-body font-semibold text-rose-gold">
+                  {testimonials[active].initials}
+                </span>
               </div>
-
-              <p className="text-sm font-body text-chocolate/70 leading-relaxed flex-1 mb-6 italic">
-                &ldquo;{t.quote}&rdquo;
+              <p className="font-body font-semibold text-chocolate text-sm tracking-wide">
+                {testimonials[active].name}
               </p>
+              <p className="font-body text-xs text-chocolate/50 tracking-[0.14em] uppercase">
+                {testimonials[active].occasion} &mdash; {testimonials[active].location}
+              </p>
+            </motion.div>
+          </AnimatePresence>
 
-              <footer className="flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-full ${t.color} flex items-center justify-center flex-shrink-0`}>
-                  <span className="text-xs font-body font-semibold text-rose-gold">{t.initials}</span>
-                </div>
-                <div>
-                  <p className="text-sm font-body font-semibold text-chocolate">{t.name}</p>
-                  <p className="text-xs font-body text-chocolate/45">{t.title}</p>
-                </div>
-              </footer>
-            </motion.blockquote>
-          ))}
-        </motion.div>
+          {/* Pagination dots */}
+          <div
+            className="flex justify-center gap-2.5 mt-10"
+            role="tablist"
+            aria-label="Testimonial navigation"
+          >
+            {testimonials.map((_, i) => (
+              <button
+                key={i}
+                role="tab"
+                aria-selected={i === active}
+                aria-label={`View testimonial ${i + 1}`}
+                onClick={() => setActive(i)}
+                className={`rounded-full transition-all duration-300 focus-visible:outline-2 focus-visible:outline-rose-gold ${
+                  i === active
+                    ? "w-6 h-2.5 bg-blush"
+                    : "w-2.5 h-2.5 bg-blush/30 hover:bg-blush/60"
+                }`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );

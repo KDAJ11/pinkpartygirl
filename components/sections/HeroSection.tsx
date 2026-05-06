@@ -2,16 +2,17 @@
 
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
+import BlushUnderline from "@/components/ui/BlushUnderline";
 
 const PETALS = [
-  { id: 1, left: "8%", delay: "0s", duration: "9s", size: 18, rotation: 20 },
-  { id: 2, left: "18%", delay: "1.5s", duration: "11s", size: 14, rotation: -15 },
-  { id: 3, left: "30%", delay: "0.8s", duration: "8s", size: 20, rotation: 30 },
-  { id: 4, left: "45%", delay: "3s", duration: "12s", size: 12, rotation: -25 },
-  { id: 5, left: "58%", delay: "0.3s", duration: "10s", size: 16, rotation: 15 },
-  { id: 6, left: "70%", delay: "2s", duration: "9.5s", size: 22, rotation: -10 },
-  { id: 7, left: "82%", delay: "1s", duration: "13s", size: 13, rotation: 35 },
-  { id: 8, left: "92%", delay: "4s", duration: "8.5s", size: 17, rotation: -30 },
+  { id: 1, left: "8%",  delay: "0s",   duration: "9s",   size: 18, rotation: 20 },
+  { id: 2, left: "18%", delay: "1.5s", duration: "11s",  size: 14, rotation: -15 },
+  { id: 3, left: "30%", delay: "0.8s", duration: "8s",   size: 20, rotation: 30 },
+  { id: 4, left: "45%", delay: "3s",   duration: "12s",  size: 12, rotation: -25 },
+  { id: 5, left: "58%", delay: "0.3s", duration: "10s",  size: 16, rotation: 15 },
+  { id: 6, left: "70%", delay: "2s",   duration: "9.5s", size: 22, rotation: -10 },
+  { id: 7, left: "82%", delay: "1s",   duration: "13s",  size: 13, rotation: 35 },
+  { id: 8, left: "92%", delay: "4s",   duration: "8.5s", size: 17, rotation: -30 },
 ];
 
 function Petal({ left, delay, duration, size, rotation }: (typeof PETALS)[0]) {
@@ -66,36 +67,63 @@ export default function HeroSection() {
     <section
       className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden"
       style={{
-        background:
-          "radial-gradient(ellipse 80% 70% at 50% -5%, #FFD6DF 0%, #FAF6EF 55%, #FAF6EF 100%)",
+        background: "radial-gradient(ellipse 80% 70% at 50% -5%, #FFD6DF 0%, #FAF6EF 55%, #FAF6EF 100%)",
       }}
     >
-      {/* Floating petals */}
+      {/* ── Ambient gradient orbs ───────────────────────────── */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
+        {/* Orb 1 — large blush top-right */}
+        <div
+          className="orb-1 absolute rounded-full blur-3xl"
+          style={{
+            width: "580px",
+            height: "580px",
+            top: "-120px",
+            right: "-80px",
+            background: "radial-gradient(circle, rgba(242,160,176,0.40) 0%, rgba(242,160,176,0) 70%)",
+          }}
+        />
+        {/* Orb 2 — rose mid-left */}
+        <div
+          className="orb-2 absolute rounded-full blur-3xl"
+          style={{
+            width: "420px",
+            height: "420px",
+            top: "30%",
+            left: "-60px",
+            background: "radial-gradient(circle, rgba(232,165,152,0.30) 0%, rgba(232,165,152,0) 70%)",
+          }}
+        />
+        {/* Orb 3 — cream bottom-center */}
+        <div
+          className="orb-3 absolute rounded-full blur-3xl"
+          style={{
+            width: "500px",
+            height: "500px",
+            bottom: "-100px",
+            left: "30%",
+            background: "radial-gradient(circle, rgba(250,246,239,0.50) 0%, rgba(250,246,239,0) 70%)",
+          }}
+        />
+        {/* Orb 4 — blush light top-left */}
+        <div
+          className="orb-4 absolute rounded-full blur-3xl"
+          style={{
+            width: "360px",
+            height: "360px",
+            top: "10%",
+            left: "20%",
+            background: "radial-gradient(circle, rgba(255,210,220,0.35) 0%, rgba(255,210,220,0) 70%)",
+          }}
+        />
+      </div>
+
+      {/* ── Falling petals ──────────────────────────────────── */}
       <div className="absolute inset-0 overflow-hidden" aria-hidden="true">
-        {PETALS.map((p) => (
-          <Petal key={p.id} {...p} />
-        ))}
+        {PETALS.map((p) => <Petal key={p.id} {...p} />)}
       </div>
 
-      {/* Decorative blobs */}
-      <div aria-hidden="true" className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div
-          className="absolute -top-20 -right-20 w-[500px] h-[500px] rounded-full opacity-25 animate-float-slow"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(242,160,176,0.5) 0%, rgba(242,160,176,0) 70%)",
-          }}
-        />
-        <div
-          className="absolute -bottom-10 -left-16 w-[380px] h-[380px] rounded-full opacity-20 animate-float-medium"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(201,149,108,0.4) 0%, rgba(201,149,108,0) 70%)",
-          }}
-        />
-      </div>
-
-      {/* Ribbon accent SVG */}
+      {/* ── Ribbon accent ───────────────────────────────────── */}
       <div
         aria-hidden="true"
         className="absolute top-1/4 right-8 md:right-20 opacity-15 animate-float-medium"
@@ -106,8 +134,8 @@ export default function HeroSection() {
         </svg>
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
+      {/* ── Content ─────────────────────────────────────────── */}
+      <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-8 text-center">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -123,36 +151,41 @@ export default function HeroSection() {
             <div className="w-8 h-px bg-gradient-to-l from-transparent to-rose-gold" />
           </motion.div>
 
-          {/* Heading */}
+          {/* Heading — clamp for mobile */}
           <motion.h1
             variants={itemVariants}
-            className="font-display text-5xl md:text-7xl lg:text-8xl font-semibold text-chocolate leading-[1.05] tracking-tight mb-6 text-balance"
-            style={{ fontFamily: "var(--font-playfair)" }}
+            className="font-display font-semibold text-chocolate leading-[1.05] tracking-tight mb-6 text-balance"
+            style={{
+              fontFamily: "var(--font-playfair)",
+              fontSize: "clamp(2.5rem, 8vw, 5rem)",
+            }}
           >
             Moments made{" "}
-            <span className="italic font-normal" style={{ color: "#C9956C" }}>
-              unforgettable
-            </span>
+            <BlushUnderline>
+              <span className="italic font-normal" style={{ color: "#C9956C" }}>
+                unforgettable
+              </span>
+            </BlushUnderline>
             .
           </motion.h1>
 
           {/* Subheading */}
           <motion.p
             variants={itemVariants}
-            className="text-lg md:text-xl font-body font-light text-chocolate/65 max-w-lg mx-auto leading-relaxed mb-10"
+            className="text-base md:text-xl font-body font-light text-chocolate/65 max-w-lg mx-auto leading-relaxed mb-10"
           >
             Your secret to extraordinary celebrations — luxury events, curated gift boxes, and surprise experiences crafted with love.
           </motion.p>
 
-          {/* CTAs */}
+          {/* CTAs — full width on mobile */}
           <motion.div
             variants={itemVariants}
-            className="flex flex-col sm:flex-row items-center gap-4"
+            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 w-full sm:w-auto"
           >
-            <Button href="/contact" size="lg">
+            <Button href="/contact" size="lg" className="w-full sm:w-auto justify-center">
               Plan My Moment
             </Button>
-            <Button href="/shop" variant="secondary" size="lg">
+            <Button href="/shop" variant="secondary" size="lg" className="w-full sm:w-auto justify-center">
               Explore Gift Boxes
             </Button>
           </motion.div>
@@ -160,7 +193,7 @@ export default function HeroSection() {
           {/* Social proof */}
           <motion.div
             variants={itemVariants}
-            className="mt-14 flex flex-col sm:flex-row items-center gap-5 text-sm text-chocolate/50 font-body"
+            className="mt-14 flex flex-col sm:flex-row items-center gap-4 sm:gap-5 text-sm text-chocolate/50 font-body"
           >
             <div className="flex items-center gap-1.5">
               {[...Array(5)].map((_, i) => (

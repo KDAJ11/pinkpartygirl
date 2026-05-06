@@ -11,7 +11,7 @@ export default function GiftBoxShowcase() {
 
   return (
     <section className="py-24 bg-cream" ref={ref}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-16">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -37,8 +37,8 @@ export default function GiftBoxShowcase() {
           </p>
         </motion.div>
 
-        {/* Cards grid */}
-        <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
+        {/* Cards grid — overflow-visible so hover bow is not clipped */}
+        <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 overflow-visible">
           {giftBoxes.map((box, i) => (
             <GiftBoxCard key={box.id} box={box} index={i} />
           ))}
